@@ -141,11 +141,13 @@ const AboutPage = () => {
                   Academic Focus
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-white/70">
-                  Pursuing a BSBA in Financial Management at National University
-                  Manila. I apply financial modeling and analytical principles
-                  to my web development projects, ensuring that technical
-                  solutions like MitigatePlus are both operationally efficient
-                  and economically viable.
+                  Currently pursuing a degree in Information Technology at
+                  National University Manila. I specialize in full-stack
+                  development and system architecture, focusing on building
+                  scalable, user-centric solutions. Through projects like
+                  MitigatePlus, I apply my technical expertise in the MERN stack
+                  and UI/UX principles to create robust platforms that address
+                  real-world community challenges and disaster risk management.
                 </p>
               </article>
             </div>
