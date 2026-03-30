@@ -1,21 +1,39 @@
-import React from "react";
-import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+// HomePage Structure
+import Layout from "./components/Layout";
+import ArticlePage from "./pages/ArticlePage";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+
+const routes = [
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "",
+        element: <HomePage />,
+      },
+      {
+        path: "about",
+        element: <AboutPage />,
+      },
+      {
+        path: "articles",
+        element: <ArticlePage />,
+      },
+    ],
+  },
+];
+
+const router = createBrowserRouter(routes);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Welcome to My React App People!</h1>
-        <p>
-          Name: Ellica Chris M. Onggoco <br />
-          Section: INF 235 <br />
-          Github Link:{" "}
-          <a href="https://github.com/ellicaonggoco/onggoco-webprog">
-            Click This!
-          </a>
-        </p>
-      </header>
-    </div>
+    <>
+      <RouterProvider router={router} />
+    </>
   );
 }
 
