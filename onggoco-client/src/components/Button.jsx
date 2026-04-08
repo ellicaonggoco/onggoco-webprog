@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-
 const variantClasses = {
   primary: "bg-[#ff6b00] text-white hover:bg-[#e66000] border-transparent",
-  secondary: "bg-transparent text-white border-zinc-700 hover:bg-zinc-800",
+  secondary:
+    "bg-transparent text-zinc-900 border-zinc-900 hover:bg-zinc-800 hover:text-white dark:text-white dark:border-zinc-700",
 };
 
 const Button = ({

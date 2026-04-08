@@ -112,7 +112,7 @@ const HomePage = () => {
               Building scalable single-page applications with robust component
               architecture and modern web standards.
             </p>
-            <Button className="mt-4" variant="primary">
+            <Button to="/NotFoundPage" className="mt-4" variant="primary">
               View More
             </Button>
           </article>
@@ -132,7 +132,7 @@ const HomePage = () => {
               Writing utility-first CSS to create custom, beautiful designs
               without bloated code and ensuring responsiveness.
             </p>
-            <Button className="mt-4" variant="primary">
+            <Button to="/NotFoundPage" className="mt-4" variant="primary">
               View More
             </Button>
           </article>
@@ -152,7 +152,7 @@ const HomePage = () => {
               Maintaining clean codebases and collaborating effectively through
               version control and branching strategies.
             </p>
-            <Button className="mt-4" variant="primary">
+            <Button to="/NotFoundPage" className="mt-4" variant="primary">
               View More
             </Button>
           </article>

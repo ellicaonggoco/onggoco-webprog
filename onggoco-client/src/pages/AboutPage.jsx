@@ -26,12 +26,12 @@ const AboutPage = () => {
             </p>
 
             <h1 className="max-w-xl text-3xl font-bold leading-tight text-white sm:text-5xl">
-              Web Developer & Financial Management Student.
+              Web Developer & IT Student.
             </h1>
 
             <p className="mt-3 max-w-lg text-sm leading-7 text-white/70 sm:text-base">
-              I am a student at National University Manila pursuing a BSBA in
-              Financial Management. I specialize in full-stack web development
+              I am a student at National University Manila pursuing a BS in
+              Information Technology. I specialize in full-stack web development
               and user-centric design.
             </p>
 
@@ -173,7 +173,11 @@ const AboutPage = () => {
               ))}
             </div>
 
-            <Button className="mt-5 w-full" variant="primary">
+            <Button
+              to="/NotFoundPage"
+              className="mt-5 w-full"
+              variant="primary"
+            >
               View Section
             </Button>
           </div>

@@ -1,18 +1,20 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-// HomePage Structure
+import "./assets/styles/index.css";
 import Layout from "./components/Layout";
+import AboutPage from "./pages/AboutPage";
+import ArticleListPage from "./pages/ArticleListPage";
 import ArticlePage from "./pages/ArticlePage";
 import HomePage from "./pages/HomePage";
-import AboutPage from "./pages/AboutPage";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const routes = [
   {
     path: "/",
     element: <Layout />,
+    errorElement: <NotFoundPage />,
     children: [
       {
-        path: "",
+        index: true,
         element: <HomePage />,
       },
       {
@@ -21,6 +23,10 @@ const routes = [
       },
       {
         path: "articles",
+        element: <ArticleListPage />,
+      },
+      {
+        path: "articles/:name",
         element: <ArticlePage />,
       },
     ],
@@ -30,11 +36,7 @@ const routes = [
 const router = createBrowserRouter(routes);
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
