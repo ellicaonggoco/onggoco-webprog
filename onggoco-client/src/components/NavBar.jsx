@@ -9,8 +9,8 @@ const links = [
 
 const navLinkClassName = ({ isActive }) =>
   [
-    "px-4 py-2 text-[14px] font-semibold uppercase tracking-[0.24em] transition",
-    isActive ? "text-orange-500" : "text-white/60 hover:text-orange-400",
+    "px-4 py-2 text-[15px] font-bold uppercase tracking-[0.24em] transition",
+    isActive ? "text-[#ff6b00]" : "text-white/60 hover:text-[#ff6b00]",
   ].join(" ");
 
 const NavBar = () => {
@@ -18,10 +18,14 @@ const NavBar = () => {
     <header className="fixed inset-x-0 top-0 z-50 bg-[#0b0b0b]/80 backdrop-blur border-b border-white/10">
       <div className="flex items-center justify-between px-9 py-6">
         <NavLink to="/">
-          <img src={logo} alt="Logo" className="h-17" />
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-16 w-auto transition-transform hover:scale-105"
+          />
         </NavLink>
 
-        <nav className="flex items-center gap-6 ml-auto">
+        <nav className="flex items-center gap-8 ml-auto">
           {links.map((link) => (
             <NavLink
               key={link.to}
@@ -32,6 +36,12 @@ const NavBar = () => {
               {link.label}
             </NavLink>
           ))}
+
+          <NavLink to="/auth/signin">
+            <button className="ml-4 px-8 py-3 rounded-full border border-[#ff6b00] text-[#ff6b00] text-[13px] font-bold uppercase tracking-[0.2em] transition-all duration-300 hover:bg-[#ff6b00] hover:text-white active:scale-95">
+              Log In
+            </button>
+          </NavLink>
         </nav>
       </div>
     </header>

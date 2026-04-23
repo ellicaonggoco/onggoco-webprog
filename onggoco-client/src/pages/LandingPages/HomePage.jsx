@@ -1,8 +1,8 @@
-import Button from "../components/Button";
-import logo from "../assets/logo/ellicaimage.png";
-import skillImg01 from "../assets/logo/git.png";
-import skillImg02 from "../assets/logo/reactnext.png";
-import skillImg03 from "../assets/logo/tailwindcss.png";
+import Button from "../../components/Button";
+import logo from "../../assets/logo/ellicaimage.png";
+import skillImg01 from "../../assets/logo/git.png";
+import skillImg02 from "../../assets/logo/reactnext.png";
+import skillImg03 from "../../assets/logo/tailwindcss.png";
 
 const HomePage = () => {
   return (
