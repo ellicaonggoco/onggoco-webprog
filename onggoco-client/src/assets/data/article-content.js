@@ -1,8 +1,8 @@
-import ncII from "../assets/logo/ncII.jpg";
-import mitigate from "../assets/logo/mitigate.jpg";
-import heuristic from "../assets/logo/heuristic.jpg";
-import gunita from "../assets/logo/gunita.jpg";
-import foure from "../assets/logo/fourelugawan.jpg";
+import ncII from "../logo/nc.jpg";
+import mitigate from "../logo/mitigate.jpg";
+import heuristic from "../logo/heuristic.jpg";
+import gunita from "../logo/gunita.jpg";
+import foure from "../logo/fourelugawan.jpg";
 
 const articles = [
   {

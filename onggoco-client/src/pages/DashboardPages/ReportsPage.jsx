@@ -9,10 +9,12 @@ import {
   ToggleButton,
   Chip,
   Container,
+  Button,
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { Print as PrintIcon } from "@mui/icons-material";
 
 const months = [
   "Jan",
@@ -72,12 +74,179 @@ const axisStyle = {
 export default function ReportsPage() {
   const [period, setPeriod] = useState("monthly");
 
+  const handlePrint = () => {
+    // Create printable HTML
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Reports Dashboard</title>
+          <meta charset="utf-8" />
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 40px;
+              background: white;
+              color: #333;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              border-bottom: 2px solid #f97316;
+              padding-bottom: 20px;
+            }
+            .title {
+              font-size: 28px;
+              font-weight: bold;
+              color: #f97316;
+            }
+            .subtitle {
+              font-size: 14px;
+              color: #666;
+              margin-top: 5px;
+            }
+            .date {
+              font-size: 12px;
+              color: #999;
+              margin-top: 10px;
+            }
+            .stats {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 20px;
+              margin-bottom: 30px;
+            }
+            .stat-card {
+              flex: 1;
+              border: 1px solid #ddd;
+              border-radius: 10px;
+              padding: 15px;
+              text-align: center;
+              background: #f9f9f9;
+            }
+            .stat-label {
+              font-size: 11px;
+              text-transform: uppercase;
+              color: #666;
+            }
+            .stat-value {
+              font-size: 24px;
+              font-weight: bold;
+              margin-top: 8px;
+            }
+            h3 {
+              margin-top: 25px;
+              margin-bottom: 15px;
+              color: #333;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 15px 0;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 10px;
+              text-align: left;
+            }
+            th {
+              background: #f5f5f5;
+            }
+            .footer {
+              text-align: center;
+              font-size: 10px;
+              color: #999;
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #eee;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="title">Report Summary</div>
+            <div class="subtitle">Analytics overview for generated reports, category breakdown, and completion performance.</div>
+            <div class="date">Prepared on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</div>
+          </div>
+          
+          <div class="stats">
+            <div class="stat-card"><div class="stat-label">AVG. MONTHLY REVENUE</div><div class="stat-value" style="color: #f97316">$7,608</div></div>
+            <div class="stat-card"><div class="stat-label">TOTAL ANNUAL REVENUE</div><div class="stat-value" style="color: #22d3ee">$91,300</div></div>
+            <div class="stat-card"><div class="stat-label">PEAK MONTH</div><div class="stat-value" style="color: #a78bfa">December</div></div>
+            <div class="stat-card"><div class="stat-label">YOY GROWTH</div><div class="stat-value" style="color: #34d399">+22.4%</div></div>
+          </div>
+
+          <h3>Monthly Report Output</h3>
+          <table>
+            <thead><tr><th>Month</th><th>Revenue ($)</th><th>Expenses ($)</th></tr></thead>
+            <tbody>
+              ${months
+                .slice(0, 6)
+                .map(
+                  (m, i) =>
+                    `<tr><td>${m}</td><td>$${revenueData[i]}</td><td>$${expensesData[i]}</td></tr>`,
+                )
+                .join("")}
+            </tbody>
+          </table>
+
+          <h3>Report Category Share</h3>
+          <table>
+            <thead><tr><th>Category</th><th>Percentage</th></tr></thead>
+            <tbody>
+              ${pieData.map((p) => `<tr><td>${p.label}</td><td>${p.value}%</td></tr>`).join("")}
+            </tbody>
+          </table>
+
+          <h3>Monthly Visitors Trend</h3>
+          <table>
+            <thead><tr><th>Month</th><th>Visitors</th></tr></thead>
+            <tbody>
+              ${months.map((m, i) => `<tr><td>${m}</td><td>${visitorData[i].toLocaleString()}</td></tr>`).join("")}
+            </tbody>
+          </table>
+
+          <div class="footer">
+            Generated from Reports Dashboard | Data represents current fiscal year
+          </div>
+        </body>
+      </html>
+    `;
+
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   return (
     <Container
       maxWidth={false}
       sx={{ py: 5, px: { xs: 3, md: 5 }, width: "100%" }}
     >
-      {/* Header */}
+      {/* Print Button */}
+      <Box display="flex" justifyContent="flex-end" mb={3}>
+        <Button
+          variant="contained"
+          startIcon={<PrintIcon />}
+          onClick={handlePrint}
+          sx={{
+            bgcolor: "#f97316",
+            color: "#000",
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 600,
+            textTransform: "none",
+            borderRadius: "10px",
+            px: 3,
+            py: 1,
+            "&:hover": { bgcolor: "#ea7008" },
+          }}
+        >
+          Print / Save as PDF
+        </Button>
+      </Box>
+
+      {/* Screen View */}
       <Box textAlign="center" mb={6}>
         <Typography
           sx={{
@@ -93,16 +262,14 @@ export default function ReportsPage() {
         <Typography
           sx={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: "1.5rem",
-            color: "#f97316",
-            mb: 2,
+            fontSize: "1rem",
+            color: "#475569",
           }}
         >
           Data visualization and analytics overview
         </Typography>
       </Box>
 
-      {/* Period Toggle - Centered */}
       <Box display="flex" justifyContent="center" mb={8}>
         <ToggleButtonGroup
           value={period}
@@ -114,25 +281,6 @@ export default function ReportsPage() {
             border: "1px solid rgba(255,255,255,0.06)",
             borderRadius: "12px",
             p: "6px",
-            "& .MuiToggleButtonGroup-grouped": {
-              border: 0,
-              borderRadius: "8px !important",
-              mx: 1,
-            },
-            "& .MuiToggleButton-root": {
-              textTransform: "none",
-              px: 4,
-              py: 1.2,
-              fontSize: "0.9rem",
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 600,
-              color: "#64748b",
-              "&.Mui-selected": {
-                bgcolor: "#f97316",
-                color: "#000",
-                "&:hover": { bgcolor: "#ea7008" },
-              },
-            },
           }}
         >
           <ToggleButton value="weekly">Weekly</ToggleButton>
@@ -140,8 +288,6 @@ export default function ReportsPage() {
           <ToggleButton value="yearly">Yearly</ToggleButton>
         </ToggleButtonGroup>
       </Box>
-
-      <Box sx={{ height: 30 }} />
 
       <Box
         sx={{
@@ -153,13 +299,7 @@ export default function ReportsPage() {
         }}
       >
         {summaryStats.map((s) => (
-          <Box
-            key={s.label}
-            sx={{
-              flex: "1 1 220px",
-              minWidth: 200,
-            }}
-          >
+          <Box key={s.label} sx={{ flex: "1 1 220px", minWidth: 200 }}>
             <Card elevation={0} sx={cardSx}>
               <CardContent sx={{ p: 4, textAlign: "center" }}>
                 <Typography
@@ -168,9 +308,7 @@ export default function ReportsPage() {
                     fontSize: "0.75rem",
                     color: "#475569",
                     textTransform: "uppercase",
-                    letterSpacing: "0.1em",
                     mb: 2,
-                    fontWeight: 500,
                   }}
                 >
                   {s.label}
@@ -179,7 +317,7 @@ export default function ReportsPage() {
                   sx={{
                     fontFamily: "'Syne', sans-serif",
                     fontWeight: 800,
-                    fontSize: { xs: "1.4rem", md: "1.8rem" },
+                    fontSize: "1.8rem",
                     color: s.color,
                   }}
                 >
@@ -191,78 +329,29 @@ export default function ReportsPage() {
         ))}
       </Box>
 
-      {/* Charts row - Horizontal */}
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 4,
-          mb: 8,
-        }}
-      >
-        {/* Bar Chart */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4, mb: 8 }}>
         <Box sx={{ flex: "2 1 55%", minWidth: 320 }}>
           <Card elevation={0} sx={cardSx}>
             <CardContent sx={{ p: 3.5 }}>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={2.5}
-                flexWrap="wrap"
-                gap={1}
+              <Typography
+                sx={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "1.2rem",
+                  color: "#f1f5f9",
+                  mb: 2,
+                }}
               >
-                <Typography
-                  sx={{
-                    fontFamily: "'Syne', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "1.2rem",
-                    color: "#f1f5f9",
-                  }}
-                >
-                  Revenue vs Expenses
-                </Typography>
-                <Box display="flex" gap={2.5}>
-                  {[
-                    { label: "Revenue", color: "#f97316" },
-                    { label: "Expenses", color: "#22d3ee" },
-                  ].map((l) => (
-                    <Box
-                      key={l.label}
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                    >
-                      <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          bgcolor: l.color,
-                        }}
-                      />
-                      <Typography
-                        sx={{
-                          fontSize: "0.75rem",
-                          color: "#475569",
-                          fontFamily: "'DM Sans', sans-serif",
-                        }}
-                      >
-                        {l.label}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
+                Revenue vs Expenses
+              </Typography>
               <Divider sx={{ borderColor: "rgba(255,255,255,0.06)", mb: 3 }} />
               <BarChart
                 xAxis={[{ scaleType: "band", data: months }]}
                 series={[
-                  { data: revenueData, label: "Revenue", color: "#f97316" },
-                  { data: expensesData, label: "Expenses", color: "#22d3ee" },
+                  { data: revenueData, color: "#f97316" },
+                  { data: expensesData, color: "#22d3ee" },
                 ]}
                 height={360}
-                margin={{ top: 10, bottom: 30, left: 60, right: 10 }}
                 slotProps={{ legend: { hidden: true } }}
                 sx={axisStyle}
               />
@@ -270,7 +359,6 @@ export default function ReportsPage() {
           </Card>
         </Box>
 
-        {/* Pie Chart */}
         <Box sx={{ flex: "1 1 35%", minWidth: 300 }}>
           <Card elevation={0} sx={cardSx}>
             <CardContent sx={{ p: 3.5 }}>
@@ -280,7 +368,7 @@ export default function ReportsPage() {
                   fontWeight: 700,
                   fontSize: "1.2rem",
                   color: "#f1f5f9",
-                  mb: 2.5,
+                  mb: 2,
                 }}
               >
                 Traffic Sources
@@ -293,8 +381,6 @@ export default function ReportsPage() {
                       data: pieData,
                       innerRadius: 55,
                       outerRadius: 95,
-                      paddingAngle: 3,
-                      cornerRadius: 5,
                       cx: 125,
                       cy: 115,
                     },
@@ -320,27 +406,13 @@ export default function ReportsPage() {
                           height: 10,
                           borderRadius: "50%",
                           bgcolor: item.color,
-                          flexShrink: 0,
                         }}
                       />
-                      <Typography
-                        sx={{
-                          fontFamily: "'DM Sans', sans-serif",
-                          fontSize: "0.8rem",
-                          color: "#64748b",
-                        }}
-                      >
+                      <Typography sx={{ fontSize: "0.8rem", color: "#64748b" }}>
                         {item.label}
                       </Typography>
                     </Box>
-                    <Typography
-                      sx={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontSize: "0.8rem",
-                        fontWeight: 700,
-                        color: item.color,
-                      }}
-                    >
+                    <Typography sx={{ fontWeight: 700, color: item.color }}>
                       {item.value}%
                     </Typography>
                   </Box>
@@ -351,53 +423,31 @@ export default function ReportsPage() {
         </Box>
       </Box>
 
-      {/* Line Chart - Full width */}
       <Card elevation={0} sx={cardSx}>
         <CardContent sx={{ p: 3.5 }}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2.5}
+          <Typography
+            sx={{
+              fontFamily: "'Syne', sans-serif",
+              fontWeight: 700,
+              fontSize: "1.2rem",
+              color: "#f1f5f9",
+              mb: 2,
+            }}
           >
-            <Typography
-              sx={{
-                fontFamily: "'Syne', sans-serif",
-                fontWeight: 700,
-                fontSize: "1.2rem",
-                color: "#f1f5f9",
-              }}
-            >
-              Monthly Visitors
-            </Typography>
-            <Chip
-              label="2024"
-              size="small"
-              sx={{
-                bgcolor: "rgba(249,115,22,0.1)",
-                color: "#f97316",
-                fontFamily: "'Syne', sans-serif",
-                fontWeight: 600,
-                fontSize: "0.7rem",
-                border: "1px solid rgba(249,115,22,0.2)",
-                height: 26,
-              }}
-            />
-          </Box>
+            Monthly Visitors
+          </Typography>
           <Divider sx={{ borderColor: "rgba(255,255,255,0.06)", mb: 3 }} />
           <LineChart
             xAxis={[{ scaleType: "band", data: months }]}
             series={[
               {
                 data: visitorData,
-                label: "Visitors",
                 color: "#f97316",
                 area: true,
                 showMark: false,
               },
             ]}
             height={280}
-            margin={{ top: 10, bottom: 30, left: 60, right: 20 }}
             slotProps={{ legend: { hidden: true } }}
             sx={{
               ...axisStyle,
