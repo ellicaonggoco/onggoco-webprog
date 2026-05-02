@@ -11,16 +11,21 @@ import AuthLayout from "./layouts/AuthLayout.jsx";
 import SignInPage from "./pages/AuthPages/SignInPage";
 import SignUpPage from "./pages/AuthPages/SignUpPage";
 
+import DashboardLayout from "./layouts/DashLayout.jsx";
+import DashboardPage from "./pages/DashboardPages/DashboardPage";
+import ReportsPage from "./pages/DashboardPages/ReportsPage";
+import UsersPage from "./pages/DashboardPages/UsersPage";
+
 import NotFoundPage from "./pages/NotFoundPage";
 
-const routes = [
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     errorElement: <NotFoundPage />,
     children: [
       {
-        path: "",
+        index: true,
         element: <HomePage />,
       },
       {
@@ -38,7 +43,7 @@ const routes = [
     ],
   },
   {
-    path: "auth/",
+    path: "auth",
     element: <AuthLayout />,
     errorElement: <NotFoundPage />,
     children: [
@@ -52,16 +57,29 @@ const routes = [
       },
     ],
   },
-];
-
-const router = createBrowserRouter(routes);
+  {
+    path: "dashboard",
+    element: <DashboardLayout />,
+    errorElement: <NotFoundPage />,
+    children: [
+      {
+        index: true,
+        element: <DashboardPage />,
+      },
+      {
+        path: "reports",
+        element: <ReportsPage />,
+      },
+      {
+        path: "users",
+        element: <UsersPage />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
