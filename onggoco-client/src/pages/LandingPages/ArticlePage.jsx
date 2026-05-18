@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Button from "../../components/Button";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 function ArticlePage() {
   const { name } = useParams(); // name is the slug
   const [article, setArticle] = useState(null);
@@ -12,10 +14,7 @@ function ArticlePage() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        // Fetch all active articles and find by slug (or implement single article endpoint)
-        const { data } = await axios.get(
-          "http://localhost:5000/api/articles/active",
-        );
+        const { data } = await axios.get(`${API_URL}/articles/active`);
         const found = data.find((a) => a.slug === name);
         if (!found) throw new Error("Article not found");
         setArticle(found);

@@ -3,6 +3,8 @@ import axios from "axios";
 import Button from "../../components/Button";
 import ArticleList from "../../components/ArticleList";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 const ArticleListPage = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,10 +13,7 @@ const ArticleListPage = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:5000/api/articles/active",
-        );
-        // Normalize: ensure each article has paragraphs array and preview
+        const { data } = await axios.get(`${API_URL}/articles/active`);
         const normalized = data.map((article) => ({
           ...article,
           paragraphs: Array.isArray(article.paragraphs)
