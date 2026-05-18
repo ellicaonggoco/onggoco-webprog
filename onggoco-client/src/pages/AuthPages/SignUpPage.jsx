@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import { createUser } from "../../services/UserService";
 
@@ -10,6 +10,7 @@ const actionButtonClassName =
   "w-full rounded-2xl py-4 text-[12px] font-bold uppercase tracking-[0.25em] transition-all duration-300 active:scale-[0.98]";
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -33,7 +34,6 @@ const SignUpPage = () => {
     setError("");
     setSuccess("");
 
-    // Validation
     if (
       !formData.firstName ||
       !formData.lastName ||
@@ -51,7 +51,6 @@ const SignUpPage = () => {
     }
 
     try {
-      // Note: backend defaults type to "viewer" (lowercase)
       const response = await createUser(formData);
       console.log("Registration success:", response.data);
 
@@ -63,9 +62,9 @@ const SignUpPage = () => {
       setSuccess("Registration successful! Redirecting to login...");
       setFormData({ firstName: "", lastName: "", email: "", password: "" });
 
-      // Redirect after 2 seconds
+      // Use navigate instead of window.location
       setTimeout(() => {
-        window.location.href = "/auth/signin";
+        navigate("/auth/signin");
       }, 2000);
     } catch (err) {
       const message =
