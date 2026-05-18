@@ -16,16 +16,19 @@ import {
   Avatar,
   Tooltip,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   Dashboard as DashboardIcon,
   BarChart as BarChartIcon,
   People as PeopleIcon,
+  Article as ArticleIcon,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   NotificationsNone as NotificationsIcon,
   Settings as SettingsIcon,
+  Logout as LogoutIcon,
 } from "@mui/icons-material";
 
 const darkTheme = createTheme({
@@ -44,6 +47,7 @@ const navItems = [
   { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
   { label: "Reports", icon: <BarChartIcon />, path: "/dashboard/reports" },
   { label: "Users", icon: <PeopleIcon />, path: "/dashboard/users" },
+  { label: "Articles", icon: <ArticleIcon />, path: "/dashboard/articles" },
 ];
 
 export default function DashLayout() {
@@ -52,6 +56,14 @@ export default function DashLayout() {
   const location = useLocation();
   const isMobile = useMediaQuery("(max-width:768px)");
   const drawerWidth = open ? DRAWER_WIDTH : MINI_WIDTH;
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("firstName");
+    localStorage.removeItem("type");
+    navigate("/auth/signin");
+  };
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -117,6 +129,15 @@ export default function DashLayout() {
                   sx={{ color: "#475569", "&:hover": { color: "#f97316" } }}
                 >
                   <SettingsIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Logout">
+                <IconButton
+                  onClick={handleLogout}
+                  size="small"
+                  sx={{ color: "#475569", "&:hover": { color: "#f97316" } }}
+                >
+                  <LogoutIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
               <Avatar
@@ -337,7 +358,7 @@ export default function DashLayout() {
           )}
         </Drawer>
 
-        {/* Main Content — takes all remaining width */}
+        {/* Main Content */}
         <Box
           component="main"
           sx={{
@@ -345,7 +366,7 @@ export default function DashLayout() {
             mt: "60px",
             bgcolor: "#0d0d0d",
             minHeight: "calc(100vh - 60px)",
-            width: 0, // forces flexGrow to work correctly in flex containers
+            width: 0,
             overflow: "auto",
           }}
         >

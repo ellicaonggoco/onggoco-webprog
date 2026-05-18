@@ -1,8 +1,39 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Button from "../../components/Button";
 import ArticleList from "../../components/ArticleList";
-import articles from "../../assets/data/article-content.js";
 
 const ArticleListPage = () => {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:5000/api/articles/active",
+        );
+        // Normalize: ensure each article has paragraphs array and preview
+        const normalized = data.map((article) => ({
+          ...article,
+          paragraphs: Array.isArray(article.paragraphs)
+            ? article.paragraphs
+            : [],
+          preview:
+            article.preview || article.paragraphs?.[0]?.substring(0, 150) || "",
+        }));
+        setArticles(normalized);
+      } catch (err) {
+        console.error("Error fetching active articles:", err);
+        setError("Failed to load articles. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchArticles();
+  }, []);
+
   return (
     <div className="flex w-full flex-col gap-6 bg-[#0b0b0b] min-h-screen">
       <section className="border-y border-white/10 bg-zinc-900/50 px-4 py-12 sm:px-6 lg:px-8">
@@ -33,7 +64,9 @@ const ArticleListPage = () => {
           </h2>
         </div>
 
-        <ArticleList articles={articles} />
+        {loading && <p className="text-zinc-400">Loading articles...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+        {!loading && !error && <ArticleList articles={articles} />}
       </section>
     </div>
   );

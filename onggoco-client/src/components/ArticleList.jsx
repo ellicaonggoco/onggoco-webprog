@@ -2,17 +2,25 @@ import { Link } from "react-router-dom";
 import Button from "./Button";
 
 const ArticleList = ({ articles }) => {
+  if (!articles || articles.length === 0) {
+    return <p className="text-zinc-400">No articles available.</p>;
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {articles.map((article, index) => (
         <article
-          key={article.name}
+          key={article.slug}
           className="rounded-3xl border-2 border-white/10 bg-zinc-900/40 p-4"
         >
           <div className="flex aspect-4/3 items-center justify-center rounded-[1.25rem] bg-zinc-800 overflow-hidden">
             {article.image ? (
               <img
-                src={article.image}
+                src={
+                  article.image
+                    ? `http://localhost:5000${article.image}`
+                    : "/placeholder.png"
+                }
                 alt={article.title}
                 className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
               />
@@ -27,9 +35,13 @@ const ArticleList = ({ articles }) => {
             {article.title}
           </h3>
           <p className="mt-3 text-sm leading-6 text-zinc-400">
-            {article.content[0].substring(0, 150)}...
+            {article.preview ||
+              (article.paragraphs &&
+                article.paragraphs[0]?.substring(0, 150)) ||
+              "No preview available."}
+            ...
           </p>
-          <Link to={`/articles/${article.name}`}>
+          <Link to={`/articles/${article.slug}`}>
             <Button className="mt-4 w-full" variant="primary">
               Read More
             </Button>

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo/ellicalogo.png";
 
 const links = [
@@ -14,6 +14,17 @@ const navLinkClassName = ({ isActive }) =>
   ].join(" ");
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("firstName");
+    localStorage.removeItem("type");
+    navigate("/auth/signin");
+  };
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-[#0b0b0b]/80 backdrop-blur border-b border-white/10">
       <div className="flex items-center justify-between px-9 py-6">
@@ -37,11 +48,20 @@ const NavBar = () => {
             </NavLink>
           ))}
 
-          <NavLink to="/auth/signin">
-            <button className="ml-4 px-8 py-3 rounded-full border border-[#ff6b00] text-[#ff6b00] text-[13px] font-bold uppercase tracking-[0.2em] transition-all duration-300 hover:bg-[#ff6b00] hover:text-white active:scale-95">
-              Log In
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="ml-4 px-8 py-3 rounded-full border border-[#ff6b00] text-[#ff6b00] text-[13px] font-bold uppercase tracking-[0.2em] transition-all duration-300 hover:bg-[#ff6b00] hover:text-white active:scale-95"
+            >
+              Logout
             </button>
-          </NavLink>
+          ) : (
+            <NavLink to="/auth/signin">
+              <button className="ml-4 px-8 py-3 rounded-full border border-[#ff6b00] text-[#ff6b00] text-[13px] font-bold uppercase tracking-[0.2em] transition-all duration-300 hover:bg-[#ff6b00] hover:text-white active:scale-95">
+                Log In
+              </button>
+            </NavLink>
+          )}
         </nav>
       </div>
     </header>
