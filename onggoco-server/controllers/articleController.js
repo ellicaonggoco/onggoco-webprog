@@ -9,9 +9,10 @@ const getArticles = async (req, res) => {
   }
 };
 
+// ✅ Case‑insensitive query for active articles
 const getActiveArticles = async (req, res) => {
   try {
-    const articles = await Article.find({ status: "active" });
+    const articles = await Article.find({ status: { $regex: /^active$/i } });
     res.json(articles);
   } catch (error) {
     res.status(500).json({ message: error.message });
