@@ -4,22 +4,17 @@ import {
   Navigate,
 } from "react-router-dom";
 
-// Layouts
 import Layout from "./layouts/Layout";
 import AuthLayout from "./layouts/AuthLayout.jsx";
 import DashboardLayout from "./layouts/DashLayout.jsx";
 
-// Public Pages
 import HomePage from "./pages/LandingPages/HomePage";
 import AboutPage from "./pages/LandingPages/AboutPage";
 import ArticleListPage from "./pages/LandingPages/ArticleListPage";
 import ArticlePage from "./pages/LandingPages/ArticlePage";
 
-// Auth Pages
 import SignInPage from "./pages/AuthPages/SignInPage";
 import SignUpPage from "./pages/AuthPages/SignUpPage";
-
-// Dashboard Pages
 import DashboardPage from "./pages/DashboardPages/DashboardPage";
 import ReportsPage from "./pages/DashboardPages/ReportsPage";
 import UsersPage from "./pages/DashboardPages/UsersPage";
@@ -27,12 +22,10 @@ import DashArticleListPage from "./pages/DashboardPages/DashArticleListPage";
 
 import NotFoundPage from "./pages/NotFoundPage";
 
-// ========== Protected Route Wrapper ==========
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem("token");
   const userType = localStorage.getItem("type");
 
-  // Debug logs (remove after fixing)
   console.log("ProtectedRoute check:", {
     token: !!token,
     userType,
@@ -44,7 +37,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/auth/signin" replace />;
   }
 
-  // Case‑insensitive role check
   if (
     allowedRoles &&
     !allowedRoles.some((role) => role.toLowerCase() === userType?.toLowerCase())
@@ -55,7 +47,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   return children;
 };
-// =============================================
 
 const router = createBrowserRouter([
   {
