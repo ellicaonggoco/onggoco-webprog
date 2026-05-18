@@ -2,11 +2,9 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-};
+const generateToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-// GET all users (exclude passwords)
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({}, "-password");
@@ -16,10 +14,9 @@ const getUsers = async (req, res) => {
   }
 };
 
-// CREATE a new user (admin or signup)
 const createUser = async (req, res) => {
   try {
-    const {
+    let {
       firstName,
       lastName,
       email,
@@ -30,18 +27,21 @@ const createUser = async (req, res) => {
       age,
       contactNumber,
     } = req.body;
-
     if (!password)
-      return res.status(400).json({ message: "Password is required" });
+      return res.status(400).json({ message: "Password required" });
 
-    // Build full name
     let fullName = req.body.name;
     if (!fullName && firstName && lastName)
       fullName = `${firstName} ${lastName}`;
-    if (!fullName) return res.status(400).json({ message: "Name is required" });
+    if (!fullName) return res.status(400).json({ message: "Name required" });
+
+    // Auto‑generate username if missing
+    if (!username) {
+      const base = email.split("@")[0].replace(/[^a-z0-9]/gi, "");
+      username = `${base}${Math.floor(Math.random() * 10000)}`;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({
       name: fullName,
       firstName,
@@ -67,23 +67,18 @@ const createUser = async (req, res) => {
   }
 };
 
-// LOGIN user (block viewers)
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
-
-    if (user.type === "viewer") {
+    if (user.type === "viewer")
       return res
         .status(403)
         .json({ message: "Viewers cannot log in. Contact admin." });
-    }
-
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid)
       return res.status(401).json({ message: "Invalid credentials" });
-
     const token = generateToken(user._id);
     res.json({
       token,
@@ -95,17 +90,13 @@ const loginUser = async (req, res) => {
   }
 };
 
-// UPDATE user (admin only)
 const updateUser = async (req, res) => {
   try {
     const updateData = { ...req.body };
-    if (updateData.password) {
+    if (updateData.password)
       updateData.password = await bcrypt.hash(updateData.password, 10);
-    }
-    // If name not provided but firstName+lastName are, build name
-    if (!updateData.name && updateData.firstName && updateData.lastName) {
+    if (!updateData.name && updateData.firstName && updateData.lastName)
       updateData.name = `${updateData.firstName} ${updateData.lastName}`;
-    }
     const user = await User.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
     }).select("-password");
@@ -116,7 +107,6 @@ const updateUser = async (req, res) => {
   }
 };
 
-// DELETE user (admin only)
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);

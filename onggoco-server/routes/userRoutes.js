@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  createUser,
+  createUser, // ← changed from registerUser
   loginUser,
   getUsers,
   updateUser,
