@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Button from "../../components/Button";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 function ArticlePage() {
-  const { name } = useParams(); // name is the slug
+  const { name } = useParams();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,7 +15,7 @@ function ArticlePage() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/articles/active`);
+        const { data } = await axios.get(`${API_BASE_URL}/articles/active`);
         const found = data.find((a) => a.slug === name);
         if (!found) throw new Error("Article not found");
         setArticle(found);
@@ -46,6 +47,14 @@ function ArticlePage() {
     );
   }
 
+  // Build absolute image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "/placeholder.png";
+    if (imagePath.startsWith("http")) return imagePath;
+    const baseUrl = API_BASE_URL.replace(/\/api$/, "");
+    return `${baseUrl}${imagePath}`;
+  };
+
   return (
     <div className="flex w-full flex-col gap-6">
       <section className="border-y-2 border-white/10 bg-zinc-900/40 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
@@ -74,7 +83,7 @@ function ArticlePage() {
         <div className="mx-auto max-w-3xl">
           <div className="flex aspect-4/3 items-center justify-center rounded-[1.25rem] border-2 border-white/10 bg-zinc-900 overflow-hidden mb-8">
             <img
-              src={article.image || "/placeholder.png"}
+              src={getImageUrl(article.image)}
               alt={article.title}
               className="h-full w-full object-cover"
             />
