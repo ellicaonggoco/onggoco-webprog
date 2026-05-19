@@ -9,7 +9,6 @@ const articleRoutes = require("./routes/articleRoutes");
 const app = express();
 const jsonParser = bodyParser.json();
 
-// Database Connection
 connectDB();
 
 // Middleware
@@ -19,7 +18,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 
-// Optional CORS hardening (already covered by cors())
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -31,6 +29,17 @@ app.use((req, res, next) => {
     "GET, POST, PUT, DELETE, PATCH, OPTIONS",
   );
   next();
+});
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "Backend API is running.",
+    endpoints: {
+      users: "/api/users",
+      articles: "/api/articles",
+      activeArticles: "/api/articles/active",
+    },
+  });
 });
 
 // Routes
