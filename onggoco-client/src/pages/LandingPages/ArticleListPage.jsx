@@ -3,35 +3,18 @@ import axios from "axios";
 import Button from "../../components/Button";
 import ArticleList from "../../components/ArticleList";
 
-// Log the API_URL to confirm it's correct on the live site
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-console.log("ArticleListPage - API_URL used:", API_URL);
-
-// Temporary static data (remove once API works)
-const FALLBACK_ARTICLES = [
-  {
-    slug: "welcome",
-    title: "Welcome to Our Blog",
-    paragraphs: ["This is a fallback article while we fix the API connection."],
-    preview: "A temporary article to show that the component works.",
-    image: "",
-  },
-];
 
 const ArticleListPage = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
-    console.log("ArticleListPage - useEffect running");
     const fetchArticles = async () => {
       try {
-        console.log("Fetching from:", `${API_URL}/articles/active`);
         const { data } = await axios.get(`${API_URL}/articles/active`);
-        console.log("API response:", data);
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           const normalized = data.map((article) => ({
             ...article,
             paragraphs: Array.isArray(article.paragraphs)
@@ -43,19 +26,12 @@ const ArticleListPage = () => {
               "",
           }));
           setArticles(normalized);
-          setUsingFallback(false);
         } else {
-          // No data from API, use fallback for testing
-          console.warn("API returned empty, using fallback articles");
-          setArticles(FALLBACK_ARTICLES);
-          setUsingFallback(true);
+          setArticles([]);
         }
       } catch (err) {
         console.error("Error fetching active articles:", err);
-        // Use fallback on error
-        setArticles(FALLBACK_ARTICLES);
-        setUsingFallback(true);
-        setError("Failed to load articles from server. Showing fallback.");
+        setError("Failed to load articles. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -91,11 +67,6 @@ const ArticleListPage = () => {
           <h2 className="mt-2 text-2xl font-semibold text-white">
             Article card grid
           </h2>
-          {usingFallback && (
-            <p className="text-yellow-400 text-sm mt-2">
-              ⚠️ Using fallback articles – API connection issue
-            </p>
-          )}
         </div>
 
         {loading && <p className="text-zinc-400">Loading articles...</p>}

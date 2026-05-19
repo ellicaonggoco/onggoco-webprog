@@ -1,6 +1,17 @@
 import { Link } from "react-router-dom";
 import Button from "./Button";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const BACKEND_URL = API_BASE_URL.replace(/\/api$/, "");
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith("http")) return imagePath;
+  const cleanPath = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath;
+  return `${BACKEND_URL}/${cleanPath}`;
+};
+
 const ArticleList = ({ articles }) => {
   if (!articles || articles.length === 0) {
     return <p className="text-zinc-400">No articles available.</p>;
@@ -16,13 +27,13 @@ const ArticleList = ({ articles }) => {
           <div className="flex aspect-4/3 items-center justify-center rounded-[1.25rem] bg-zinc-800 overflow-hidden">
             {article.image ? (
               <img
-                src={
-                  article.image
-                    ? `http://localhost:5000${article.image}`
-                    : "/placeholder.png"
-                }
+                src={getImageUrl(article.image)}
                 alt={article.title}
                 className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/placeholder.png";
+                }}
               />
             ) : (
               <div className="h-12 w-12 border-2 border-zinc-700 bg-zinc-800" />
@@ -36,8 +47,7 @@ const ArticleList = ({ articles }) => {
           </h3>
           <p className="mt-3 text-sm leading-6 text-zinc-400">
             {article.preview ||
-              (article.paragraphs &&
-                article.paragraphs[0]?.substring(0, 150)) ||
+              article.paragraphs?.[0]?.substring(0, 150) ||
               "No preview available."}
             ...
           </p>
