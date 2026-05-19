@@ -11,9 +11,14 @@ const ArticleListPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    console.log("ArticleListPage: useEffect started");
+    console.log("API_URL =", API_URL);
     const fetchArticles = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/articles/active`);
+        const url = `${API_URL}/articles/active`;
+        console.log("Fetching from:", url);
+        const { data } = await axios.get(url);
+        console.log("API response data:", data);
         if (Array.isArray(data)) {
           const normalized = data.map((article) => ({
             ...article,
@@ -30,7 +35,7 @@ const ArticleListPage = () => {
           setArticles([]);
         }
       } catch (err) {
-        console.error("Error fetching active articles:", err);
+        console.error("Error fetching articles:", err);
         setError("Failed to load articles. Please try again later.");
       } finally {
         setLoading(false);
